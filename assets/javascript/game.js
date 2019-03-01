@@ -136,23 +136,50 @@ var gameObj = {
     }
     console.log(winFlag);
     return winFlag;
+  },
+
+  reset: function(guessed) {
+    var index = gameObj.answersList.indexOf(guessed);
+    gameObj.endFlag = 0;
+    gameObj.correctGuesses = [];
+    gameObj.incorrectGuesses = [];
+    gameObj.guessesLeft = 8;
+    gameObj.answersList.splice(index, 1);
+    if (gameObj.answersList.length > 0) {
+      gameObj.play();
+    } else {
+      gameObj.getALife();
+    }
+  },
+
+  getALife: function() {
+    gameObj.displayedText.textContent =
+      "You've used up all of the words I had! Good job! I totally non-sarcastically respect you!";
+    gameObj.endFlag = 1;
+  },
+
+  play: function() {
+    gameObj.selectAWord();
+    gameObj.displayedText.textContent = gameObj.wordToPrint();
   }
 };
-var winner;
-gameObj.selectAWord();
-gameObj.displayedText.textContent = gameObj.wordToPrint();
+
+gameObj.play();
 document.onkeyup = function(event) {
-  if (gameObj.inWord(event.key)) {
+  console.log(gameObj.endFlag);
+  if (gameObj.endFlag == 1) {
+    gameObj.reset(gameObj.word);
+  } else if (gameObj.inWord(event.key)) {
     gameObj.correctGuesses.push(event.key);
     gameObj.displayedText.textContent = gameObj.wordToPrint();
-    winner = gameObj.winner();
-    if (winner) {
+
+    if (gameObj.winner()) {
       gameObj.displayedText.textContent =
         'You win! The word was "' +
         gameObj.word +
         '" all along! Press any key to play again!';
+      gameObj.endFlag = 1;
     }
-    gameObj.endFlag = 1;
   } else {
     if (gameObj.incorrectGuesses.indexOf(event.key) == -1) {
       gameObj.incorrectGuesses.push(event.key);
