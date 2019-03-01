@@ -10,18 +10,32 @@
 var gameObj = {
   // Establish a list of potential strings to select
   answersList: [
-    "skywalker",
-    "solo",
-    "leia",
-    "chewbacca",
-    "droid",
-    "falcon",
-    "lightsaber",
-    "kenobi",
-    "stormtrooper",
-    "darth",
-    "vader",
-    "emperor"
+    [
+      "skywalker",
+      "https://gifimage.net/wp-content/uploads/2018/04/luke-skywalker-gif-7.gif"
+    ],
+    ["solo", "https://media.giphy.com/media/l1AsMtCR9G3iq6nba/giphy.gif"],
+    ["leia", "https://media.giphy.com/media/3ohuPfGENOtDzsEaXK/giphy.gif"],
+    ["chewbacca", "https://media.giphy.com/media/RU1uDnk2iJ0Bi/giphy.gif"],
+    [
+      "droid",
+      "https://media1.tenor.com/images/393dcfd64df826e3ebce1fcd92c93f57/tenor.gif?itemid=8325570"
+    ],
+    ["falcon", "https://i.imgur.com/YaijQe6.jpg"],
+    [
+      "lightsaber",
+      "https://media2.giphy.com/media/3ohhwpmrm8RszmIUco/source.gif"
+    ],
+    ["kenobi", "https://media.giphy.com/media/KOVlHmbBA09XO/giphy.gif"],
+    ["stormtrooper", "https://i.imgur.com/Ya1Yz.gif"],
+    ["maul", "https://i.imgur.com/l8HraEe.gif"],
+    ["vader", "https://i.imgur.com/P7DWDb3.gif"],
+    ["emperor", "https://i.imgur.com/cJlBUVL.gif?noredirect"]
+  ],
+
+  loserGif: [
+    "https://media.giphy.com/media/3ohuPvTsPqrfJUr3ry/giphy.gif",
+    "https://media.giphy.com/media/26tP1PZCE3xiDloqc/giphy.gif"
   ],
 
   endFlag: 0,
@@ -47,6 +61,12 @@ var gameObj = {
 
   missedGuesses: document.getElementById("wrong guesses"),
 
+  guessesLeft: document.getElementById("Guesses Left"),
+
+  endImage: document.getElementsByClassName("winner"),
+
+  fullAnswer: "",
+
   // Selects a word from the array of potential words
   selectAWord: function() {
     // Determine the length of the array. I kept screwing it up when I tried to do it all in one length, so I decided to just make
@@ -55,8 +75,10 @@ var gameObj = {
 
     // Select the word by choosing a random number to serve as the index of the "answerList" array.
     // The random number rangers from 0 to the length of the array - 1 (since the array indexes at 0)
-    gameObj.word =
+
+    gameObj.fullAnswer =
       gameObj.answersList[Math.floor(Math.random() * answerLength)];
+    gameObj.word = gameObj.fullAnswer[0];
 
     //   Log the word so that I can cheat while I debug this in the future.
     console.log(gameObj.word);
@@ -70,7 +92,6 @@ var gameObj = {
     // This is the first of two for loops. We will iterate through all of the letters in the
     // word that we selected, one at a time.
     for (var wordLetter = 0; wordLetter < gameObj.word.length; wordLetter++) {
-      console.log(gameObj.word[wordLetter]);
       // matched is a sort of "dummy" variable. It will be appended to blankString once we know whether or not
       // a letter has been guessed. Initially, we set it to " _ " because we are assuming that the letter has not been guessed.
       // If it IS guessed, we will update it below.
@@ -93,17 +114,14 @@ var gameObj = {
       //   Update blank string with the result of our check. This will ONLY iterate once for every letter in the selected word.
       blankString += matched;
     }
-    console.log(blankString);
 
     // Send the blankstring back to the section of code that called this function so that we can update the display.
-    return blankString;
+    return blankString.toUpperCase();
   },
 
   //   Check if a given guess is in the word
   inWord: function(guess) {
-    // console.log(guess);
     for (var i = 0; i < gameObj.word.length; i++) {
-      //   console.log(gameObj.word[i]);
       if (gameObj.word.indexOf(guess) != -1) {
         return true;
       } else {
@@ -114,7 +132,6 @@ var gameObj = {
 
   missedStr: function() {
     return gameObj.incorrectGuesses.join();
-    // return "worked";
   },
 
   loser: function() {
@@ -145,6 +162,7 @@ var gameObj = {
     gameObj.incorrectGuesses = [];
     gameObj.guessesLeft = 8;
     gameObj.answersList.splice(index, 1);
+    gameObj.missedGuesses.textContent = gameObj.missedStr();
     if (gameObj.answersList.length > 0) {
       gameObj.play();
     } else {
@@ -165,10 +183,10 @@ var gameObj = {
 };
 
 gameObj.play();
+
 document.onkeyup = function(event) {
-  console.log(gameObj.endFlag);
   if (gameObj.endFlag == 1) {
-    gameObj.reset(gameObj.word);
+    gameObj.reset(gameObj.fullAnswer);
   } else if (gameObj.inWord(event.key)) {
     gameObj.correctGuesses.push(event.key);
     gameObj.displayedText.textContent = gameObj.wordToPrint();
@@ -176,19 +194,23 @@ document.onkeyup = function(event) {
     if (gameObj.winner()) {
       gameObj.displayedText.textContent =
         'You win! The word was "' +
-        gameObj.word +
-        '" all along! Press any key to play again!';
+        gameObj.word.toUpperCase() +
+        '!" Press any key to play again!';
       gameObj.endFlag = 1;
+      gameObj.endImage.attr("background-image", gameObj.fullAnswer[1]);
     }
   } else {
-    if (gameObj.incorrectGuesses.indexOf(event.key) == -1) {
-      gameObj.incorrectGuesses.push(event.key);
+    if (gameObj.incorrectGuesses.indexOf(event.key.toUpperCase()) == -1) {
+      gameObj.incorrectGuesses.push(event.key.toUpperCase());
 
       gameObj.guessesLeft -= 1;
       if (gameObj.loser()) {
         gameObj.displayedText.textContent =
-          "YOU LOSE! Press any key to try again!";
+          "YOU LOSE! The word was " +
+          gameObj.word.toUpperCase() +
+          "! Press any key to try again!";
         gameObj.endFlag = 1;
+        gameObj.endImage.style.backgroundImage = "url(gameObj.loserGif[0])";
       }
     }
     gameObj.missedGuesses.textContent = gameObj.missedStr();

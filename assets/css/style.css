@@ -1,0 +1,39 @@
+.jumbotron {
+  background: rgb(204, 204, 204, 0);
+}
+
+.swFont {
+  font-family: "Poller One", cursive;
+  color: yellow;
+  text-align: center;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.navbar-css {
+  color: yellow !important;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+  font-family: "Poller One", "cursive";
+  background-color: black;
+}
+
+.transparent {
+  background: rgb(204, 204, 204, 0) !important;
+}
+
+body {
+  background-image: url("./../images/Starscape.jpg");
+  background-repeat: no-repeat;
+}
+
+.lower-margin {
+  margin-bottom: 10%;
+}
+
+.winner {
+  width: 200px;
+  height: 200px;
+
+  background-repeat: no-repeat;
+}
