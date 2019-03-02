@@ -44,6 +44,8 @@ var gameObj = {
   // Empty array of incorrect guesses. This will be updated and will display to the user.
   incorrectGuesses: [],
 
+  winCount: 0,
+
   // This is the handle for the element that will be updated as the player guesses more and more.
   displayedText: document.getElementById("GameSpace"),
 
@@ -52,6 +54,8 @@ var gameObj = {
   guessesRemaining: document.getElementById("Guesses Left"),
 
   endImage: document.getElementById("winner"),
+
+  wins: document.getElementById("wins"),
 
   fullAnswer: "",
 
@@ -136,11 +140,9 @@ var gameObj = {
     for (var i = 0; i < gameObj.word.length; i++) {
       if (gameObj.correctGuesses.indexOf(gameObj.word[i]) == -1) {
         winFlag = 0;
-
-        console.log(gameObj.word[i] + " is not in the correct Guesses list.");
       }
     }
-    console.log(winFlag);
+
     return winFlag;
   },
 
@@ -168,14 +170,14 @@ var gameObj = {
   play: function() {
     gameObj.selectAWord();
     gameObj.displayedText.textContent = gameObj.wordToPrint();
+    gameObj.guessesRemaining.textContent = gameObj.guessesLeft;
+    gameObj.wins.textContent = gameObj.winCount;
   }
 };
 var audioElement = document.createElement("audio");
-console.log(gameObj.endImage);
 gameObj.play();
 
 document.onkeyup = function(event) {
-  console.log(gameObj.guessesLeft);
   if (gameObj.endFlag == 1) {
     gameObj.reset(gameObj.fullAnswer);
   } else if (gameObj.inWord(event.key)) {
@@ -188,7 +190,8 @@ document.onkeyup = function(event) {
         gameObj.word.toUpperCase() +
         '!" Press any key to play again!';
       gameObj.endFlag = 1;
-      console.log(gameObj.endImage);
+      gameObj.winCount++;
+      gameObj.wins.textContent = gameObj.winCount;
 
       gameObj.endImage.style.backgroundImage =
         "url(" + gameObj.fullAnswer[1] + ")";
@@ -200,9 +203,9 @@ document.onkeyup = function(event) {
   } else {
     if (gameObj.incorrectGuesses.indexOf(event.key.toUpperCase()) == -1) {
       gameObj.incorrectGuesses.push(event.key.toUpperCase());
-      console.log(gameObj.guessesLeft);
+
       gameObj.guessesLeft -= 1;
-      console.log(gameObj.guessesLeft);
+      gameObj.guessesRemaining.textContent = gameObj.guessesLeft;
       if (gameObj.loser()) {
         gameObj.displayedText.textContent =
           "YOU LOSE! The word was " +
