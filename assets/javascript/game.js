@@ -10,33 +10,21 @@
 var gameObj = {
   // Establish a list of potential strings to select
   answersList: [
-    [
-      "skywalker",
-      "https://gifimage.net/wp-content/uploads/2018/04/luke-skywalker-gif-7.gif"
-    ],
-    ["solo", "https://media.giphy.com/media/l1AsMtCR9G3iq6nba/giphy.gif"],
-    ["leia", "https://media.giphy.com/media/3ohuPfGENOtDzsEaXK/giphy.gif"],
-    ["chewbacca", "https://media.giphy.com/media/RU1uDnk2iJ0Bi/giphy.gif"],
-    [
-      "droid",
-      "https://media1.tenor.com/images/393dcfd64df826e3ebce1fcd92c93f57/tenor.gif?itemid=8325570"
-    ],
-    ["falcon", "https://i.imgur.com/YaijQe6.jpg"],
-    [
-      "lightsaber",
-      "https://media2.giphy.com/media/3ohhwpmrm8RszmIUco/source.gif"
-    ],
-    ["kenobi", "https://media.giphy.com/media/KOVlHmbBA09XO/giphy.gif"],
-    ["stormtrooper", "https://i.imgur.com/Ya1Yz.gif"],
-    ["maul", "https://i.imgur.com/l8HraEe.gif"],
-    ["vader", "https://i.imgur.com/P7DWDb3.gif"],
-    ["emperor", "https://i.imgur.com/cJlBUVL.gif?noredirect"]
+    ["skywalker", "./assets/images/Luke.gif"],
+    ["solo", "./assets/images/Solo.webp"],
+    ["leia", "./assets/images/Leia.webp"],
+    ["chewbacca", "./assets/images/Chewie.webp"],
+    ["droid", "./assets/images/3PO.gif"],
+    ["falcon", "./assets/images/falcon.jpg"],
+    ["lightsaber", "./assets/images/saber.gif"],
+    ["kenobi", "./assets/images/kenobi.webp"],
+    ["stormtrooper", "./assets/images/trooper.gif"],
+    ["maul", "./assets/images/maul.gif"],
+    ["vader", "./assets/images/vader.gif"],
+    ["emperor", "./assets/images/power.gif"]
   ],
 
-  loserGif: [
-    "https://media.giphy.com/media/3ohuPvTsPqrfJUr3ry/giphy.gif",
-    "https://media.giphy.com/media/26tP1PZCE3xiDloqc/giphy.gif"
-  ],
+  loserGif: ["./assets/images/lose1.webp", "./assets/images/lose2.webp"],
 
   endFlag: 0,
 
@@ -61,9 +49,9 @@ var gameObj = {
 
   missedGuesses: document.getElementById("wrong guesses"),
 
-  guessesLeft: document.getElementById("Guesses Left"),
+  guessesRemaining: document.getElementById("Guesses Left"),
 
-  endImage: document.getElementsByClassName("winner"),
+  endImage: document.getElementById("winner"),
 
   fullAnswer: "",
 
@@ -78,6 +66,7 @@ var gameObj = {
 
     gameObj.fullAnswer =
       gameObj.answersList[Math.floor(Math.random() * answerLength)];
+    // gameObj.answersList[1];
     gameObj.word = gameObj.fullAnswer[0];
 
     //   Log the word so that I can cheat while I debug this in the future.
@@ -181,10 +170,12 @@ var gameObj = {
     gameObj.displayedText.textContent = gameObj.wordToPrint();
   }
 };
-
+var audioElement = document.createElement("audio");
+console.log(gameObj.endImage);
 gameObj.play();
 
 document.onkeyup = function(event) {
+  console.log(gameObj.guessesLeft);
   if (gameObj.endFlag == 1) {
     gameObj.reset(gameObj.fullAnswer);
   } else if (gameObj.inWord(event.key)) {
@@ -197,20 +188,33 @@ document.onkeyup = function(event) {
         gameObj.word.toUpperCase() +
         '!" Press any key to play again!';
       gameObj.endFlag = 1;
-      gameObj.endImage.attr("background-image", gameObj.fullAnswer[1]);
+      console.log(gameObj.endImage);
+
+      gameObj.endImage.style.backgroundImage =
+        "url(" + gameObj.fullAnswer[1] + ")";
+      gameObj.endImage.style.backgroundRepeat = "no-repeat";
+      audioElement.pause();
+      audioElement.setAttribute("src", "./assets/audio/Win.mp3");
+      audioElement.play();
     }
   } else {
     if (gameObj.incorrectGuesses.indexOf(event.key.toUpperCase()) == -1) {
       gameObj.incorrectGuesses.push(event.key.toUpperCase());
-
+      console.log(gameObj.guessesLeft);
       gameObj.guessesLeft -= 1;
+      console.log(gameObj.guessesLeft);
       if (gameObj.loser()) {
         gameObj.displayedText.textContent =
           "YOU LOSE! The word was " +
           gameObj.word.toUpperCase() +
           "! Press any key to try again!";
         gameObj.endFlag = 1;
-        gameObj.endImage.style.backgroundImage = "url(gameObj.loserGif[0])";
+        gameObj.endImage.style.backgroundImage =
+          "url(" + gameObj.loserGif[Math.floor(Math.random() * 2)] + ")";
+        gameObj.endImage.style.backgroundRepeat = "no-repeat";
+        audioElement.pause();
+        audioElement.setAttribute("src", "./assets/audio/Lose.mp3");
+        audioElement.play();
       }
     }
     gameObj.missedGuesses.textContent = gameObj.missedStr();
