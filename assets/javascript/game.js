@@ -46,6 +46,8 @@ var gameObj = {
 
   winCount: 0,
 
+  lossCount: 0,
+
   // This is the handle for the element that will be updated as the player guesses more and more.
   displayedText: document.getElementById("GameSpace"),
 
@@ -56,6 +58,8 @@ var gameObj = {
   endImage: document.getElementById("winner"),
 
   wins: document.getElementById("wins"),
+
+  losses: document.getElementById("losses"),
 
   fullAnswer: "",
 
@@ -129,6 +133,7 @@ var gameObj = {
 
   loser: function() {
     if (gameObj.guessesLeft <= 0) {
+      gameObj.lossCount++;
       return true;
     } else {
       return false;
@@ -172,6 +177,7 @@ var gameObj = {
     gameObj.displayedText.textContent = gameObj.wordToPrint();
     gameObj.guessesRemaining.textContent = gameObj.guessesLeft;
     gameObj.wins.textContent = gameObj.winCount;
+    gameObj.losses.textContent = gameObj.lossCount;
   }
 };
 var audioElement = document.createElement("audio");
