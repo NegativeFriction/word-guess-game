@@ -14,6 +14,6 @@ Likewise, if the player wins, the game will display "You win! The word was [Word
 
 If the player manages to make their way through the entire list of words, then the game will display a message letting them know that they have exhausted all of the possibilities that I programmed in, and completely sincerely telling them that the game is impressed with them.
 
-On winning, the game should play the Star Wars theme to show the player that they won. It will also display an image of the correctly identified word. On losing, the game will play the Imperial March and show an image of the Death Star.
+On winning, the game should play the Star Wars theme to show the player that they won. It will also display a gif of the correctly identified word.(note: it may not work on older macs? Someone on a 2010 Mac said that it was not working for her) On losing, the game will play the Imperial March and show a Star Wars-themed gif.
 
 The game prints the word it has selected to the console to make debugging/cheating easier.
